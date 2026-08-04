@@ -39,6 +39,7 @@
 │       ├── DoctorPrescriptionBuilder.tsx # EPCS Electronic Prescription Builder & Ledger
 │       ├── DoctorTelehealthWorkspace.tsx # Doctor Virtual Waiting Room & Consultation Notes
 │       ├── FhirHl7Modal.tsx          # FHIR R4 & HL7 v2.5.1 Message Generator & Exporter
+│       ├── GoogleMeetManager.tsx     # Google Meet API Auth & Meeting Space Creator Component
 │       ├── Header.tsx                # Universal Application Header & Session Badge
 │       ├── PatientPortal.tsx         # Patient Dashboard, Records, Telehealth & Refill Tabs
 │       ├── PrescriptionsAndRefills.tsx # Patient e-Prescription & Refill Manager
@@ -46,6 +47,9 @@
 │       ├── SosModal.tsx              # Emergency Dispatch & SOS Alert System
 │       ├── TelehealthRoom.tsx        # WebRTC Telehealth Video Consultation Room
 │       └── VirtualCareConsultation.tsx # Patient Telehealth Room & Instant Provider Matching
+│   └── lib/
+│       ├── googleAuth.ts             # Google OAuth 2.0 & Firebase Auth Integration
+│       └── googleMeet.ts             # Google Meet REST API v2 Integration Helpers
 ```
 
 ---

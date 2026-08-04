@@ -29,7 +29,6 @@ import { Sidebar } from './components/Sidebar';
 import { PatientPortal } from './components/PatientPortal';
 import { DoctorPortal } from './components/DoctorPortal';
 import { AdminPortal } from './components/AdminPortal';
-import { TelehealthRoom } from './components/TelehealthRoom';
 import { SosModal } from './components/SosModal';
 import { FhirHl7Modal } from './components/FhirHl7Modal';
 import { AuthModal } from './components/AuthModal';
@@ -78,9 +77,6 @@ export default function App() {
 
   // Modals & Registration Gateway
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [activeTelehealth, setActiveTelehealth] = useState<Appointment | null>(
-    null
-  );
   const [isSosOpen, setIsSosOpen] = useState<boolean>(false);
   const [isFhirHl7Open, setIsFhirHl7Open] = useState<boolean>(false);
 
@@ -182,6 +178,33 @@ export default function App() {
       userRole: currentUser.role,
       action: 'BOOK_APPOINTMENT',
       resource: `Appointment #${newApt.id} with ${newApt.doctorName}`,
+      status: 'SUCCESS',
+      ipAddress: '127.0.0.1',
+      timestamp: new Date().toLocaleString(),
+    };
+    setAuditLogs((prev) => [newLog, ...prev]);
+  };
+
+  const handleUpdateAppointmentMeetLink = (
+    appointmentId: string,
+    googleMeetLink: string,
+    googleMeetSpaceName: string
+  ) => {
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === appointmentId
+          ? { ...apt, googleMeetLink, googleMeetSpaceName }
+          : apt
+      )
+    );
+
+    const newLog: AuditLog = {
+      id: `log-${Date.now()}`,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      action: 'CREATE_GOOGLE_MEET_SPACE',
+      resource: `Google Meet Link Created: ${googleMeetSpaceName} for Appointment #${appointmentId}`,
       status: 'SUCCESS',
       ipAddress: '127.0.0.1',
       timestamp: new Date().toLocaleString(),
@@ -334,10 +357,14 @@ export default function App() {
               doctors={users.filter((u) => u.role === 'doctor')}
               activeTab={activeTab}
               onBookAppointment={handleBookAppointment}
-              onLaunchTelehealth={(apt) => setActiveTelehealth(apt)}
+              onLaunchTelehealth={(apt) => {
+                const link = apt.googleMeetLink || 'https://meet.google.com/new';
+                window.open(link, '_blank');
+              }}
               onPayBill={handlePayBill}
               onRequestRefill={handleRequestRefill}
               onOpenSos={() => setIsSosOpen(true)}
+              onUpdateAppointmentMeetLink={handleUpdateAppointmentMeetLink}
             />
           )}
 
@@ -350,10 +377,14 @@ export default function App() {
               labReports={labReports}
               prescriptions={prescriptions}
               activeTab={activeTab}
-              onLaunchTelehealth={(apt) => setActiveTelehealth(apt)}
+              onLaunchTelehealth={(apt) => {
+                const link = apt.googleMeetLink || 'https://meet.google.com/new';
+                window.open(link, '_blank');
+              }}
               onCreatePrescription={handleCreatePrescription}
               onCreateLabOrder={handleCreateLabOrder}
               onUpdateAppointmentStatus={handleUpdateAppointmentStatus}
+              onUpdateAppointmentMeetLink={handleUpdateAppointmentMeetLink}
             />
           )}
 
@@ -382,15 +413,6 @@ export default function App() {
         onRegister={handleRegisterUser}
         canClose={true}
       />
-
-      {/* Global Telehealth Video Room Overlay */}
-      {activeTelehealth && (
-        <TelehealthRoom
-          appointment={activeTelehealth}
-          onClose={() => setActiveTelehealth(null)}
-          userRole={currentUser.role === 'doctor' ? 'doctor' : 'patient'}
-        />
-      )}
 
       {/* Global Emergency SOS Modal */}
       {isSosOpen && (

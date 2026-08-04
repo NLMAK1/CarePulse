@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Appointment, User } from '../types';
+import { GoogleMeetManager } from './GoogleMeetManager';
 import {
   Video,
   Mic,
@@ -20,6 +21,7 @@ import {
   Send,
   HelpCircle,
   RefreshCw,
+  ExternalLink,
 } from 'lucide-react';
 
 interface VirtualCareConsultationProps {
@@ -28,6 +30,7 @@ interface VirtualCareConsultationProps {
   doctors: User[];
   onLaunchTelehealth: (apt: Appointment) => void;
   onBookAppointment: (aptData: Partial<Appointment>) => void;
+  onUpdateAppointmentMeetLink?: (appointmentId: string, meetLink: string, spaceName: string) => void;
 }
 
 export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = ({
@@ -36,6 +39,7 @@ export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = (
   doctors,
   onLaunchTelehealth,
   onBookAppointment,
+  onUpdateAppointmentMeetLink,
 }) => {
   // Device Hardware Check State
   const [camTested, setCamTested] = useState(true);
@@ -103,14 +107,14 @@ export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = (
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-bold border border-emerald-500/30">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Virtual Care Portal Active • 256-Bit Encrypted
+              Google Meet Telehealth Active
             </div>
             <h2 className="text-2xl font-bold tracking-tight">
               Virtual Care Consultation Center
             </h2>
             <p className="text-xs text-white/80 leading-relaxed">
-              Connect face-to-face with board-certified physicians, cardiologists, and specialists from anywhere.
-              HD video consultations, instant digital triage, and encrypted e-Prescription delivery.
+              Connect face-to-face with board-certified physicians, cardiologists, and specialists via Google Meet.
+              HD video consultations, instant digital triage, and automated e-Prescription delivery.
             </p>
           </div>
 
@@ -132,6 +136,11 @@ export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = (
           </div>
         </div>
       </div>
+
+      {/* Google Meet Standalone Workspace Manager Card */}
+      <GoogleMeetManager
+        onUpdateAppointmentMeetLink={onUpdateAppointmentMeetLink}
+      />
 
       {/* 2. SUB-NAVIGATION TABS */}
       <div className="flex items-center gap-2 border-b border-[#E5E0D3] pb-2 overflow-x-auto">
@@ -248,6 +257,13 @@ export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = (
                         <strong>Reason:</strong> {apt.reason}
                       </div>
                     </div>
+
+                    {/* Google Meet Room Integration for Appointment */}
+                    <GoogleMeetManager
+                      appointment={apt}
+                      onUpdateAppointmentMeetLink={onUpdateAppointmentMeetLink}
+                      compact={true}
+                    />
                   </div>
 
                   <div className="pt-2 flex items-center gap-2">
@@ -256,7 +272,8 @@ export const VirtualCareConsultation: React.FC<VirtualCareConsultationProps> = (
                       className="flex-1 py-3 bg-[#7A918D] hover:bg-[#5D6F6B] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
                     >
                       <Video className="w-4 h-4" />
-                      <span>Launch Encrypted Call</span>
+                      <span>Join Google Meet Video Call</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setViewTab('device-check')}

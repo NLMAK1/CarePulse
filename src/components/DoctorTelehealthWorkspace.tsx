@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Appointment, User, EHRRecord } from '../types';
+import { GoogleMeetManager } from './GoogleMeetManager';
 import {
   Video,
   Clock,
@@ -17,6 +18,7 @@ import {
   Send,
   MessageSquare,
   Users,
+  ExternalLink,
 } from 'lucide-react';
 
 interface DoctorTelehealthWorkspaceProps {
@@ -26,6 +28,7 @@ interface DoctorTelehealthWorkspaceProps {
   onLaunchTelehealth: (apt: Appointment) => void;
   onUpdateAppointmentStatus: (aptId: string, status: Appointment['status']) => void;
   onCreatePrescription: (rx: Partial<any>) => void;
+  onUpdateAppointmentMeetLink?: (appointmentId: string, meetLink: string, spaceName: string) => void;
 }
 
 export const DoctorTelehealthWorkspace: React.FC<DoctorTelehealthWorkspaceProps> = ({
@@ -35,6 +38,7 @@ export const DoctorTelehealthWorkspace: React.FC<DoctorTelehealthWorkspaceProps>
   onLaunchTelehealth,
   onUpdateAppointmentStatus,
   onCreatePrescription,
+  onUpdateAppointmentMeetLink,
 }) => {
   const [filterSpecialty, setFilterSpecialty] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,7 +97,7 @@ export const DoctorTelehealthWorkspace: React.FC<DoctorTelehealthWorkspaceProps>
               Virtual Waiting Room Queue ({waitingPatients.length})
             </h3>
             <span className="text-xs text-[#8C8679] font-medium">
-              Real-time WebRTC Peer Connections
+              Google Meet Video Calling Active
             </span>
           </div>
 
@@ -131,6 +135,14 @@ export const DoctorTelehealthWorkspace: React.FC<DoctorTelehealthWorkspaceProps>
                       <div className="text-xs text-[#5A5448] font-medium mt-1">
                         <strong>Chief Complaint:</strong> {apt.reason}
                       </div>
+
+                      <div className="mt-2">
+                        <GoogleMeetManager
+                          appointment={apt}
+                          onUpdateAppointmentMeetLink={onUpdateAppointmentMeetLink}
+                          compact={true}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -140,7 +152,8 @@ export const DoctorTelehealthWorkspace: React.FC<DoctorTelehealthWorkspaceProps>
                       className="px-4 py-2.5 bg-[#7A918D] hover:bg-[#5D6F6B] text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2"
                     >
                       <Video className="w-4 h-4" />
-                      <span>{apt.status === 'in-progress' ? 'Re-Join Session' : 'Start Video Call'}</span>
+                      <span>{apt.status === 'in-progress' ? 'Re-Join Google Meet' : 'Start Google Meet Call'}</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => onUpdateAppointmentStatus(apt.id, 'completed')}

@@ -37,6 +37,7 @@ interface DoctorPortalProps {
   onCreatePrescription: (rx: Partial<Prescription>) => void;
   onCreateLabOrder: (lab: Partial<LabReport>) => void;
   onUpdateAppointmentStatus: (aptId: string, status: Appointment['status']) => void;
+  onUpdateAppointmentMeetLink?: (appointmentId: string, meetLink: string, spaceName: string) => void;
 }
 
 export const DoctorPortal: React.FC<DoctorPortalProps> = ({
@@ -51,6 +52,7 @@ export const DoctorPortal: React.FC<DoctorPortalProps> = ({
   onCreatePrescription,
   onCreateLabOrder,
   onUpdateAppointmentStatus,
+  onUpdateAppointmentMeetLink,
 }) => {
   // Prescription modal state
   const [isRxModalOpen, setIsRxModalOpen] = useState(false);
@@ -236,6 +238,7 @@ export const DoctorPortal: React.FC<DoctorPortalProps> = ({
           onLaunchTelehealth={onLaunchTelehealth}
           onUpdateAppointmentStatus={onUpdateAppointmentStatus}
           onCreatePrescription={onCreatePrescription}
+          onUpdateAppointmentMeetLink={onUpdateAppointmentMeetLink}
         />
       )}
 

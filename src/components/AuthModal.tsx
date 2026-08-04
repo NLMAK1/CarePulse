@@ -81,6 +81,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     );
 
     if (found) {
+      if (found.password && found.password !== password) {
+        setErrorMsg('Incorrect password for this account. Please check your credentials and try again.');
+        return;
+      }
       onLogin(found);
       if (onClose && canClose) onClose();
     } else {
@@ -90,12 +94,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handlePatientRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pName || !pEmail) return;
+    if (!pName || !pEmail || !pPassword) return;
 
     const newPatient: User = {
       id: `pat-${Date.now()}`,
       name: pName,
       email: pEmail,
+      password: pPassword,
       role: 'patient',
       phone: pPhone || '(555) 019-2834',
       dob: pDob,
@@ -112,12 +117,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleDoctorRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dName || !dEmail) return;
+    if (!dName || !dEmail || !dPassword) return;
 
     const newDoctor: User = {
       id: `doc-${Date.now()}`,
       name: dName.startsWith('Dr.') ? dName : `Dr. ${dName}`,
       email: dEmail,
+      password: dPassword,
       role: 'doctor',
       specialty: dSpecialty,
       phone: dPhone || '(555) 302-1920',
@@ -289,7 +295,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <span>Registering a new Patient Profile with digital health card ID on this device.</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block font-bold text-[#2D332F] mb-1">Full Legal Name</label>
                 <input
@@ -311,6 +317,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="eleanor@example.com"
                   className="w-full bg-white border border-[#E5E0D3] rounded-xl p-2.5 outline-none font-medium"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#2D332F] mb-1">Account Password</label>
+                <input
+                  type="password"
+                  value={pPassword}
+                  onChange={(e) => setPPassword(e.target.value)}
+                  placeholder="Set account password"
+                  className="w-full bg-white border border-[#E5E0D3] rounded-xl p-2.5 outline-none font-medium"
+                  required
+                  minLength={4}
                 />
               </div>
             </div>
@@ -399,7 +418,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <span>Registering a verified Physician/Doctor credential with e-Prescribing rights.</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block font-bold text-[#2D332F] mb-1">Doctor Name</label>
                 <input
@@ -421,6 +440,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="emily.vance@carepulse.org"
                   className="w-full bg-white border border-[#E5E0D3] rounded-xl p-2.5 outline-none font-medium"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#2D332F] mb-1">Account Password</label>
+                <input
+                  type="password"
+                  value={dPassword}
+                  onChange={(e) => setDPassword(e.target.value)}
+                  placeholder="Set account password"
+                  className="w-full bg-white border border-[#E5E0D3] rounded-xl p-2.5 outline-none font-medium"
+                  required
+                  minLength={4}
                 />
               </div>
             </div>

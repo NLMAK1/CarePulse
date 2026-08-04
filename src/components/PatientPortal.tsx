@@ -44,6 +44,7 @@ interface PatientPortalProps {
   onPayBill: (billId: string) => void;
   onRequestRefill: (rxId: string) => void;
   onOpenSos: () => void;
+  onUpdateAppointmentMeetLink?: (appointmentId: string, meetLink: string, spaceName: string) => void;
 }
 
 export const PatientPortal: React.FC<PatientPortalProps> = ({
@@ -60,6 +61,7 @@ export const PatientPortal: React.FC<PatientPortalProps> = ({
   onPayBill,
   onRequestRefill,
   onOpenSos,
+  onUpdateAppointmentMeetLink,
 }) => {
   // Appointment Booking Modal state
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -350,6 +352,7 @@ export const PatientPortal: React.FC<PatientPortalProps> = ({
           doctors={doctors}
           onLaunchTelehealth={onLaunchTelehealth}
           onBookAppointment={onBookAppointment}
+          onUpdateAppointmentMeetLink={onUpdateAppointmentMeetLink}
         />
       )}
 

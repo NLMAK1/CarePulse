@@ -14,6 +14,7 @@ export interface User {
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   bloodType?: string;
+  password?: string;
 }
 
 export interface Appointment {
@@ -29,6 +30,8 @@ export interface Appointment {
   status: 'upcoming' | 'completed' | 'cancelled' | 'in-progress';
   reason: string;
   clinicalNotes?: string;
+  googleMeetLink?: string;
+  googleMeetSpaceName?: string;
 }
 
 export interface EHRRecord {
